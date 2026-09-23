@@ -15,10 +15,15 @@ endif
 
 # Promethean VIM3 Wi-Fi capability profile
 #
-# The BCM4359-backed radio/driver advertises STA, AP and P2P interface modes.
-# Expose each mode to Android's Wi-Fi HAL while conservatively limiting the
-# radio to one active Wi-Fi interface at a time until the exact driver
-# concurrency table is validated on the production kernel/firmware.
+# Promethean VIM3 live validation (kernel 5.15 / BCM4359 family) reports:
+#   AP <= 2, managed <= 2, P2P-client/P2P-GO <= 2, P2P-device <= 1,
+#   total interfaces <= 4, channels <= 2.
+#
+# Expose a deliberately conservative concurrent subset to Android:
+# one station + one AP + one P2P interface at the same time. This enables
+# normal WLAN connectivity, the Promethean Android Auto SoftAP, and Wi-Fi
+# Direct concurrently while staying below the validated kernel limits.
 ifeq ($(TARGET_VIM3), true)
-WIFI_HAL_INTERFACE_COMBINATIONS := {{{STA, AP, P2P}, 1}}
+WIFI_HAL_INTERFACE_COMBINATIONS := {{{STA}, 1}, {{AP}, 1}, {{P2P}, 1}}
+WIFI_HIDL_FEATURE_DUAL_INTERFACE := true
 endif
