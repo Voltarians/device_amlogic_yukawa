@@ -213,7 +213,13 @@ PRODUCT_PROPERTY_OVERRIDES += \
     bluetooth.profile.vcp.controller.enabled=true
 
 # Wifi
-PRODUCT_PACKAGES += libwpa_client wpa_supplicant hostapd wificond wpa_cli
+PRODUCT_PACKAGES += \
+    android.hardware.wifi-service \
+    libwpa_client \
+    wpa_supplicant \
+    hostapd \
+    wificond \
+    wpa_cli
 PRODUCT_PROPERTY_OVERRIDES += wifi.interface=wlan0 \
                               wifi.supplicant_scan_interval=15
 
