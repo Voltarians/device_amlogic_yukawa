@@ -25,5 +25,4 @@ endif
 # Direct concurrently while staying below the validated kernel limits.
 ifeq ($(TARGET_VIM3), true)
 WIFI_HAL_INTERFACE_COMBINATIONS := {{{STA}, 1}, {{AP}, 1}, {{P2P}, 1}}
-WIFI_HIDL_FEATURE_DUAL_INTERFACE := true
 endif
