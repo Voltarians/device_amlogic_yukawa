@@ -15,14 +15,26 @@ endif
 
 # Promethean VIM3 Wi-Fi capability profile
 #
-# Promethean VIM3 live validation (kernel 5.15 / BCM4359 family) reports:
-#   AP <= 2, managed <= 2, P2P-client/P2P-GO <= 2, P2P-device <= 1,
-#   total interfaces <= 4, channels <= 2.
+# Live kernel 5.15 / BCM4359-family validation reports:
+#   AP <= 2
+#   managed/STA <= 2
+#   P2P-client/P2P-GO <= 2
+#   P2P-device <= 1
+#   IBSS <= 1
+#   total interfaces <= 4
+#   channels <= 2
 #
-# Expose a deliberately conservative concurrent subset to Android:
-# one station + one AP + one P2P interface at the same time. This enables
-# normal WLAN connectivity, the Promethean Android Auto SoftAP, and Wi-Fi
-# Direct concurrently while staying below the validated kernel limits.
+# Android's HAL models the single P2P-device as one logical P2P iface; that
+# device may create the driver-supported P2P client/GO group interfaces.
+# IBSS has no Android Wi-Fi HAL concurrency type and remains available only
+# through lower-level nl80211/iw use.
+#
+# These three maximal combinations cover every Android-representable subset
+# within the driver's limits:
+#   2 STA + 2 AP
+#   2 STA + 1 AP + 1 P2P
+#   1 STA + 2 AP + 1 P2P
+# Any smaller STA/AP/P2P combination is a subset of one of these.
 ifeq ($(TARGET_VIM3), true)
-WIFI_HAL_INTERFACE_COMBINATIONS := {{{STA}, 1}, {{AP}, 1}, {{P2P}, 1}}
+WIFI_HAL_INTERFACE_COMBINATIONS := {{{STA}, 2}, {{AP}, 2}}, {{{STA}, 2}, {{AP}, 1}, {{P2P}, 1}}, {{{STA}, 1}, {{AP}, 2}, {{P2P}, 1}}
 endif
